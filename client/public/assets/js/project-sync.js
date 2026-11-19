@@ -124,22 +124,8 @@
 
   async function syncAuthCtas() {
     try {
-      // Email/password sessions use a sessionStorage token in addition to the
-      // httpOnly cookie. Send it here too so the standalone public homepage can
-      // recognize an already-authenticated user after a full-page navigation.
-      let sessionToken = '';
-      try {
-        sessionToken = sessionStorage.getItem('facicuse_user_session_token') || '';
-      } catch {
-        // The cookie-based session can still authenticate the request.
-      }
-
-      const headers = {};
-      if (sessionToken) headers['X-Session-Token'] = sessionToken;
-
       const res = await fetch('/api/auth/session', {
         credentials: 'include',
-        headers,
       });
       if (!res.ok) return;
       const data = await res.json();
