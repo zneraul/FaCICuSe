@@ -80,7 +80,7 @@ export function resolveFacilityImageUrl({ code, category, imageUrl } = {}) {
   const matchedPhoto = normalizedCode ? FACILITY_IMAGE_BY_CODE[normalizedCode] : null;
 
   // Prefer a matched CICS photo over old generic catalog placeholders.
-  if ( (matchedPhoto) && (!custom || DEFAULT_IMAGE_VALUES.has(custom))) return matchedPhoto;
+  if (matchedPhoto && (!custom || DEFAULT_IMAGE_VALUES.has(custom))) return matchedPhoto;
   if (custom) return custom;
   if (matchedPhoto) return matchedPhoto;
 
