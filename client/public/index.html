@@ -51,7 +51,7 @@
 
           <nav class="public-nav-links" aria-label="Primary navigation">
             <a href="#home" class="public-nav-link active" aria-current="location" data-section-link="home">Home</a>
-            <a href="#facilities" class="public-nav-link">Facilities</a>
+            <a href="#facilities" class="public-nav-link" data-section-link="facilities">Facilities</a>
             <a href="#reservations" class="public-nav-link" data-section-link="reservations">Availability</a>
             <a href="#about" class="public-nav-link" data-section-link="about">How It Works</a>
           </nav>
@@ -77,7 +77,7 @@
 
         <nav id="public-mobile-menu" class="public-mobile-drawer" aria-label="Mobile section navigation" hidden>
           <a href="#home" class="public-mobile-link active" aria-current="location" data-section-link="home">Home</a>
-          <a href="#facilities" class="public-mobile-link">Facilities</a>
+          <a href="#facilities" class="public-mobile-link" data-section-link="facilities">Facilities</a>
           <a href="#reservations" class="public-mobile-link" data-section-link="reservations">Availability</a>
           <a href="#about" class="public-mobile-link" data-section-link="about">How It Works</a>
           <a href="/signin" id="mobile-auth-cta" class="public-mobile-link" data-open-auth-modal>Sign In</a>
@@ -145,8 +145,11 @@
 
           <figure class="landing-hero-media">
             <img
-              src="/assets/images/cics-building.jpg"
-              alt="Batangas State University Alangilan CICS facility environment and campus courtyard"
+              src="/assets/images/facilities/cics-building-wider.webp"
+              alt="Batangas State University Alangilan CICS building exterior"
+              fetchpriority="high"
+              decoding="async"
+              onerror="this.onerror=null;this.src='/assets/images/cics-building.jpg'"
               referrerpolicy="no-referrer"
             />
             <figcaption class="landing-hero-caption">
