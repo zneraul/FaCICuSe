@@ -589,6 +589,18 @@ export function createLocalStoreAdapters({ storeFilePath = DEFAULT_STORE_FILE } 
       return sanitizePublicUser(created);
     },
 
+    async setPasswordByUid(uid, passwordHash) {
+      const idx = state.users.findIndex((u) => u.uid === uid);
+      if (idx === -1) return null;
+      state.users[idx] = {
+        ...state.users[idx],
+        passwordHash,
+        authProvider: 'google+password',
+      };
+      saveState();
+      return sanitizePublicUser(state.users[idx]);
+    },
+
     async markEmailVerified(id) {
       const idx = state.users.findIndex((u) => u.id === Number(id));
       if (idx === -1) return null;
