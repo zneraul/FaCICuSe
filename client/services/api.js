@@ -4,7 +4,7 @@ export function setAuthToken(token) {
   inMemoryIdToken = token || null;
 }
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\\/+$/, '');
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
 
 export async function apiRequest(path, options = {}) {
   const headers = new Headers(options.headers || {});
