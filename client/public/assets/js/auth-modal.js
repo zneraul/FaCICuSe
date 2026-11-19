@@ -328,8 +328,8 @@
       const result = await fbBridge.signInWithPopup(fbBridge.auth, fbBridge.provider);
       const idToken = await result.user.getIdToken();
 
-      const response = await fetch('/api/auth/me', {
-        method: 'GET',
+      const response = await fetch('/api/auth/session/google', {
+        method: 'POST',
         credentials: 'include',
         headers: { Authorization: 'Bearer ' + idToken },
       });
