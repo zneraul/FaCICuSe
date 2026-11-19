@@ -29,8 +29,7 @@ export function createAuthMiddleware({ authProvider, userRepo, userUseCases }) {
 
     const cookies = parseCookies(req.headers.cookie);
 
-    const headerUserToken = req.headers['x-session-token'] || '';
-    const userSessionToken = String(headerUserToken || cookies[SESSION_COOKIE_NAME] || '').trim();
+    const userSessionToken = String(cookies[SESSION_COOKIE_NAME] || '').trim();
     if (userSessionToken) {
       const verifiedUser = authProvider.verifySessionToken(userSessionToken, 'user');
       if (verifiedUser?.uid) {
