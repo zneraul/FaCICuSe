@@ -286,7 +286,7 @@ export const CICS_FACILITY_CATALOG = Object.freeze([
     'CICS-2F-MT',
     'Second Floor',
     'All Gender Restroom',
-    'A restroom for male students, employees, and building users.'
+    'A shared restroom for students, employees, and building users.'
   ),
 
   // Third Floor (8 facilities: 2 Support, 6 Learning)
