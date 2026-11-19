@@ -1,16 +1,18 @@
 import express from 'express';
 import { UserRole } from '../../domain/entities.js';
 import { asyncHandler, errorHandler } from './errorHandler.js';
+import { createLoginRateLimiter } from './loginRateLimiter.js';
 
 export function createApiRouter({ controllers, authMiddleware }) {
   const router = express.Router();
   const { optionalAuth, requireAuth, requireRole } = authMiddleware;
+  const loginRateLimiter = createLoginRateLimiter();
 
   // Health & Public Website Endpoints
   router.get('/health', asyncHandler(controllers.health));
   router.get('/auth/config', asyncHandler(controllers.getAuthConfig));
   router.get('/auth/session', optionalAuth, asyncHandler(controllers.getSessionStatus));
-  router.post('/auth/login', asyncHandler(controllers.loginWithEmail));
+  router.post('/auth/login', loginRateLimiter, asyncHandler(controllers.loginWithEmail));
   router.post('/auth/logout', asyncHandler(controllers.clearSession));
   router.post('/auth/session/google', requireAuth, asyncHandler(controllers.createGoogleSession));
   router.post('/auth/password', requireAuth, asyncHandler(controllers.setOwnPassword));
