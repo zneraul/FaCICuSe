@@ -364,12 +364,12 @@ test('PROJECT_INFO and CICS_FACILITY_CATALOG reflect verified BatStateU CICS pro
     ]
   );
 
-  // Verify exact 37 facilities across 5 floors and 3 categories (26 + 6 + 5)
-  assert.equal(CICS_FACILITY_CATALOG.length, 37);
+  // Verify exact 38 facilities across 5 floors and 3 categories (26 + 7 + 5)
+  assert.equal(CICS_FACILITY_CATALOG.length, 38);
   const floors = new Set(CICS_FACILITY_CATALOG.map((r) => r.floor));
   assert.equal(floors.size, 5);
   assert.equal(CICS_FACILITY_CATALOG.filter((r) => r.category === 'Learning').length, 26);
-  assert.equal(CICS_FACILITY_CATALOG.filter((r) => r.category === 'Administrative').length, 6);
+  assert.equal(CICS_FACILITY_CATALOG.filter((r) => r.category === 'Administrative').length, 7);
   assert.equal(CICS_FACILITY_CATALOG.filter((r) => r.category === 'Support').length, 5);
 });
 
@@ -640,7 +640,7 @@ test('reservation and maintenance workflows notify both requester and active adm
       department: 'CICS Building Operations',
     });
     const facilities = await adapters.facilityRepo.listAll();
-    assert.equal(facilities.length, 37);
+    assert.equal(facilities.length, 38);
     const room = facilities.find((f) => f.isReservable !== false && f.status === 'Available');
 
     const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
