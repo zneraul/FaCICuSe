@@ -129,7 +129,7 @@ export function AuthProvider({ children }) {
     const token = await result.user.getIdToken();
     setAuthToken(token);
     try {
-      const data = await apiRequest('/auth/me');
+      const data = await apiRequest('/auth/session/google', { method: 'POST' });
       setUser(data.user);
       syncUserProfileToFirestore(result.user, data.user);
       return data.user;
