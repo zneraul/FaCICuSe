@@ -14,6 +14,13 @@ export function PublicLayout({ children }) {
 
   const isFacilitiesActive = location.pathname.startsWith('/facilities');
   const isTimetableActive = location.pathname.startsWith('/timetable');
+  const handleHomeClick = () => {
+    setMobileMenuOpen(false);
+    setAccountMenuOpen(false);
+    if (location.pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="ambient-canvas">
@@ -22,7 +29,7 @@ export function PublicLayout({ children }) {
 
       <header className="public-header">
         <div className="public-header-inner">
-          <a href="/" className="brand-lockup">
+          <Link to="/" className="brand-lockup" onClick={handleHomeClick}>
             <span className="brand-logo-badge">
               <img
                 src="/assets/images/facicuse-logo.jpg"
@@ -32,12 +39,12 @@ export function PublicLayout({ children }) {
               />
             </span>
             <span className="brand-wordmark">FaCICuSe</span>
-          </a>
+          </Link>
 
           <nav className="public-nav-links" aria-label="Primary navigation">
-            <a href="/" className="public-nav-link">
+            <Link to="/" className="public-nav-link" onClick={handleHomeClick}>
               Home
-            </a>
+            </Link>
             <Link
               to="/facilities"
               className={`public-nav-link ${isFacilitiesActive ? 'active' : ''}`}
@@ -45,9 +52,15 @@ export function PublicLayout({ children }) {
             >
               Facilities
             </Link>
-            <a href="/#reservations" className="public-nav-link">
+            <Link to="/#reservations" className="public-nav-link">
               Availability
-            </a>
+            </Link>
+            <Link to="/#how-it-works" className="public-nav-link">
+              How It Works
+            </Link>
+            <Link to="/#faq" className="public-nav-link">
+              FAQ
+            </Link>
           </nav>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
@@ -150,9 +163,9 @@ export function PublicLayout({ children }) {
             className="public-mobile-drawer"
             aria-label="Mobile section navigation"
           >
-            <a href="/" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/" className="public-mobile-link" onClick={handleHomeClick}>
               Home
-            </a>
+            </Link>
             <Link
               to="/facilities"
               className={`public-mobile-link ${isFacilitiesActive ? 'active' : ''}`}
@@ -160,13 +173,15 @@ export function PublicLayout({ children }) {
             >
               Facilities
             </Link>
-            <a
-              href="/#reservations"
-              className="public-mobile-link"
-              onClick={() => setMobileMenuOpen(false)}
-            >
+            <Link to="/#reservations" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
               Availability
-            </a>
+            </Link>
+            <Link to="/#how-it-works" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+              How It Works
+            </Link>
+            <Link to="/#faq" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+              FAQ
+            </Link>
             {user ? (
               <>
                 <Link to="/app/profile" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
@@ -215,7 +230,7 @@ export function PublicLayout({ children }) {
       <footer id="contact" className="public-footer" style={{ scrollMarginTop: '5.5rem' }}>
         <div className="public-footer-inner">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-            <a href="/" className="brand-lockup">
+            <Link to="/" className="brand-lockup" onClick={handleHomeClick}>
               <span className="brand-logo-badge">
                 <img
                   src="/assets/images/facicuse-logo.jpg"
@@ -225,7 +240,7 @@ export function PublicLayout({ children }) {
                 />
               </span>
               <span className="brand-wordmark">FaCICuSe</span>
-            </a>
+            </Link>
             <p style={{ fontSize: '0.88rem', color: 'var(--ink-secondary)', maxWidth: '34ch' }}>
               <strong>{PROJECT_INFO.meaning}</strong> — {PROJECT_INFO.tagline}.
             </p>
@@ -245,7 +260,7 @@ export function PublicLayout({ children }) {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.42rem', fontSize: '0.86rem', color: 'var(--ink-secondary)' }}>
             <strong style={{ fontSize: '0.85rem', color: 'var(--ink-primary)' }}>Quick Links</strong>
-            <a href="/">Homepage</a>
+            <Link to="/" onClick={handleHomeClick}>Homepage</Link>
             <Link to="/facilities">CICS Directory (37 Rooms)</Link>
             <Link to="/timetable">Class Timetable</Link>
             <a href="/#reservations">Live Availability</a>
