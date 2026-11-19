@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext.jsx';
@@ -12,8 +12,22 @@ export function PublicLayout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
-  const isFacilitiesActive = location.pathname.startsWith('/facilities');
+  const isFacilitiesActive = location.pathname === '/' && location.hash === '#facilities';
   const isTimetableActive = location.pathname.startsWith('/timetable');
+  useEffect(() => {
+    if (location.pathname !== '/' || !location.hash) return undefined;
+
+    const sectionId = decodeURIComponent(location.hash.slice(1));
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.pathname, location.hash]);
+
   const handleHomeClick = () => {
     setMobileMenuOpen(false);
     setAccountMenuOpen(false);
@@ -46,9 +60,13 @@ export function PublicLayout({ children }) {
               Home
             </Link>
             <Link
-              to="/facilities"
+              to="/#facilities"
               className={`public-nav-link ${isFacilitiesActive ? 'active' : ''}`}
-              aria-current={isFacilitiesActive ? 'page' : undefined}
+              aria-current={isFacilitiesActive ? 'location' : undefined}
+              onClick={() => {
+                setMobileMenuOpen(false);
+                setAccountMenuOpen(false);
+              }}
             >
               Facilities
             </Link>
@@ -167,7 +185,7 @@ export function PublicLayout({ children }) {
               Home
             </Link>
             <Link
-              to="/facilities"
+              to="/#facilities"
               className={`public-mobile-link ${isFacilitiesActive ? 'active' : ''}`}
               onClick={() => setMobileMenuOpen(false)}
             >
