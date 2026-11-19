@@ -694,7 +694,7 @@ export function LandingPage() {
               <span>Ready to coordinate campus spaces?</span>
             </div>
             <h2 style={{ fontSize: 'clamp(1.65rem, 2.8vw, 2.25rem)', color: '#ffffff' }}>
-              Inspect room schedules immediately as a visitor, or sign in to submit reservations and maintenance reports.
+              Ready to check or reserve a CICS Building space?
             </h2>
             <p style={{ color: 'rgba(240,242,255,0.9)', marginTop: '0.55rem', fontSize: '0.98rem' }}>
               Inspect room schedules immediately as a visitor, or sign in to submit reservations and maintenance reports.
