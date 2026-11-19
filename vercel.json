@@ -5,10 +5,6 @@
       "dest": "https://facicuse.onrender.com/api/$1"
     },
     {
-      "src": "^/$",
-      "dest": "/landing.html"
-    },
-    {
       "handle": "filesystem"
     },
     {
