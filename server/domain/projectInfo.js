@@ -1,6 +1,6 @@
 /**
  * Canonical Single Source of Truth for verified FaCICuSe project metadata,
- * the canonical 37-facility CICS 5-Floor Building inventory, and BSIT academic block format reference.
+ * the canonical 38-facility CICS 5-Floor Building inventory, and BSIT academic block format reference.
  *
  * Pure Domain module (zero Express, React, or database driver dependencies).
  * Populated strictly from verified official project documents:
@@ -24,6 +24,16 @@ export const CICS_CATEGORIES = Object.freeze([
   'Learning',
   'Administrative',
   'Support',
+]);
+
+export const CICS_FACILITY_RENAMED_CODES = Object.freeze([
+  'CICS-2F-FT',
+  'CICS-2F-CONS',
+  'CICS-2F-FAC',
+  'CICS-2F-MT',
+  'CICS-3F-FT',
+  'CICS-3F-MT',
+  'CICS-4F-TECH',
 ]);
 
 export const OBSOLETE_GENERIC_FACILITY_CODES = Object.freeze([
@@ -66,15 +76,15 @@ export const PROJECT_INFO = Object.freeze({
     'Monitoring website for the CICS department facilities in real time that tracks actual room utilization against the scheduled allocation and generates visual data analytics to enhance room management efficiency.',
   buildingScope: Object.freeze({
     label: '5-Floor CICS Building',
-    summary: '1 Building · 5 Floors · 37 Facilities',
+    summary: '1 Building · 5 Floors · 38 Facilities',
     buildingCount: 1,
     floorCount: 5,
-    facilityCount: 37,
+    facilityCount: 38,
     reservableCount: 26,
-    nonReservableCount: 11,
+    nonReservableCount: 12,
     categoryTotals: Object.freeze({
       Learning: 26,
-      Administrative: 6,
+      Administrative: 7,
       Support: 5,
     }),
   }),
@@ -217,11 +227,11 @@ export const CICS_FACILITY_CATALOG = Object.freeze([
     'A storage area for staff maintenance supplies and equipment.'
   ),
 
-  // Second Floor (9 facilities: 2 Support, 2 Learning, 5 Administrative)
+  // Second Floor (10 facilities: 2 Support, 2 Learning, 6 Administrative)
   supportSpace(
     'CICS-2F-FT',
     'Second Floor',
-    'Female Toilet (2nd Floor)',
+    'Female Toilet',
     'A restroom for female students, employees, and building users.'
   ),
   learningRoom(
@@ -251,14 +261,20 @@ export const CICS_FACILITY_CATALOG = Object.freeze([
   adminOffice(
     'CICS-2F-CONS',
     'Second Floor',
-    'Consultation Office',
+    'Consultation Room',
     'An office of faculty members for student academic consultations.'
   ),
   adminOffice(
     'CICS-2F-FAC',
     'Second Floor',
-    'CICS Faculty',
+    'CICS Faculty Room',
     'An office for CICS faculty members and academic activities.'
+  ),
+  adminOffice(
+    'CICS-2F-ACC',
+    'Second Floor',
+    'Accreditation Room',
+    'An office for accreditation documentation, coordination, and related activities.'
   ),
   adminOffice(
     'CICS-2F-DEAN',
@@ -269,7 +285,7 @@ export const CICS_FACILITY_CATALOG = Object.freeze([
   supportSpace(
     'CICS-2F-MT',
     'Second Floor',
-    'Male Toilet (2nd Floor)',
+    'All Gender Restroom',
     'A restroom for male students, employees, and building users.'
   ),
 
@@ -277,7 +293,7 @@ export const CICS_FACILITY_CATALOG = Object.freeze([
   supportSpace(
     'CICS-3F-FT',
     'Third Floor',
-    'Female Toilet (3rd Floor)',
+    'Female Toilet',
     'A restroom for female students, employees, and building users.'
   ),
   learningRoom(
@@ -325,7 +341,7 @@ export const CICS_FACILITY_CATALOG = Object.freeze([
   supportSpace(
     'CICS-3F-MT',
     'Third Floor',
-    'Male Toilet (3rd Floor)',
+    'Male Toilet',
     'A restroom for male students, employees, and building users.'
   ),
 
@@ -360,7 +376,7 @@ export const CICS_FACILITY_CATALOG = Object.freeze([
   learningRoom(
     'CICS-4F-TECH',
     'Fourth Floor',
-    'Tech Laboratory',
+    'Technicians’ Room',
     'A laboratory for technical exercises, experiments, and lessons.',
     IMG_LAB
   ),
