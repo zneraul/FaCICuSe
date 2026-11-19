@@ -143,7 +143,7 @@ export function createLocalStoreAdapters({ storeFilePath = DEFAULT_STORE_FILE } 
         const raw = fs.readFileSync(storeFilePath, 'utf8');
         const parsed = JSON.parse(raw);
         if (parsed && Array.isArray(parsed.facilities) && Array.isArray(parsed.users)) {
-          // Ensure canonical 37 CICS facilities are always present without inserting demo accounts
+          // Ensure canonical 38 CICS facilities are always present without inserting demo accounts
           const existingCodes = new Set(parsed.facilities.map((f) => f.code));
           const now = new Date().toISOString();
           let changed = false;
