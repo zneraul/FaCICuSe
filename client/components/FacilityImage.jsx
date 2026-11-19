@@ -23,6 +23,8 @@ export function FacilityImage({ src, alt, className = 'facility-media-img' }) {
       alt={alt}
       className={className}
       referrerPolicy="no-referrer"
+      loading="lazy"
+      decoding="async"
       onError={() => setFailed(true)}
     />
   );
