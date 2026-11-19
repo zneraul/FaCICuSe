@@ -12,7 +12,7 @@ export function PublicLayout({ children }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [accountMenuOpen, setAccountMenuOpen] = useState(false);
 
-  const isFacilitiesActive = location.pathname === '/' && location.hash === '#facilities';
+  const isFacilitiesActive = location.pathname.startsWith('/facilities') || (location.pathname === '/' && location.hash === '#facilities');
   const isTimetableActive = location.pathname.startsWith('/timetable');
   useEffect(() => {
     if (location.pathname !== '/') return undefined;
@@ -199,7 +199,7 @@ export function PublicLayout({ children }) {
             <Link to="/#reservations" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
               Availability
             </Link>
-            <Link to="/#how-it-works" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
+            <Link to="/#about" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
               How It Works
             </Link>
             <Link to="/#faq" className="public-mobile-link" onClick={() => setMobileMenuOpen(false)}>
@@ -284,7 +284,7 @@ export function PublicLayout({ children }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.42rem', fontSize: '0.86rem', color: 'var(--ink-secondary)' }}>
             <strong style={{ fontSize: '0.85rem', color: 'var(--ink-primary)' }}>Quick Links</strong>
             <Link to="/" onClick={handleHomeClick}>Homepage</Link>
-            <Link to="/facilities">CICS Directory (37 Rooms)</Link>
+            <Link to="/facilities">CICS Directory (38 Spaces)</Link>
             <Link to="/timetable">Class Timetable</Link>
             <a href="/#reservations">Live Availability</a>
             <a href="/#faq">FAQ</a>
