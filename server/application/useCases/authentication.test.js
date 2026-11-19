@@ -5,6 +5,7 @@ import { createAuthMiddleware, SESSION_COOKIE_NAME } from '../../adapters/inboun
 import express from 'express';
 import { createApiRouter } from '../../adapters/inbound/routes.js';
 import { createHttpControllers } from '../../adapters/inbound/httpControllers.js';
+import { createLoginRateLimiter } from '../../adapters/inbound/loginRateLimiter.js';
 
 function makeUserRepo(overrides = {}) {
   const users = new Map();
@@ -309,7 +310,9 @@ test('Google bearer sign-in exchanges into an HttpOnly cookie that restores the 
   assert.match(sessionCookie, /HttpOnly/i);
   assert.match(sessionCookie, /Secure/i);
   assert.match(sessionCookie, /SameSite=None/i);
-  assert.deepEqual((await signIn.json()).user, {
+  const signInBody = await signIn.json();
+  assert.equal(Object.hasOwn(signInBody, 'sessionToken'), false);
+  assert.deepEqual(signInBody.user, {
     id: actor.id,
     uid: actor.uid,
     email: actor.email,
@@ -327,4 +330,60 @@ test('Google bearer sign-in exchanges into an HttpOnly cookie that restores the 
   });
   assert.equal(restored.status, 200);
   assert.equal((await restored.json()).user.uid, actor.uid);
+});
+
+
+test('legacy X-Session-Token headers cannot authenticate app sessions', async () => {
+  const middleware = createAuthMiddleware({
+    authProvider: {
+      verifySessionToken() { throw new Error('No cookie token should be present'); },
+      async verifyFirebaseIdToken() { throw new Error('No bearer token should be present'); },
+    },
+    userRepo: { async findByUid() { return null; } },
+    userUseCases: {},
+  });
+  let statusCode;
+  const req = { headers: { 'x-session-token': 'legacy-session-token' } };
+  await middleware.requireAuth(req, {
+    status(code) { statusCode = code; return this; },
+    json() {},
+  }, () => assert.fail('A JavaScript-readable legacy token must not authenticate'));
+  assert.equal(statusCode, 401);
+});
+
+test('password login rate limiter blocks attempts after the configured threshold and resets', () => {
+  let currentTime = 1000;
+  const limiter = createLoginRateLimiter({
+    windowMs: 60_000,
+    maxAttempts: 2,
+    now: () => currentTime,
+  });
+  const makeResponse = () => ({
+    statusCode: 200,
+    headers: {},
+    body: null,
+    setHeader(name, value) { this.headers[name] = value; },
+    status(code) { this.statusCode = code; return this; },
+    json(body) { this.body = body; return this; },
+  });
+  let nextCalls = 0;
+  const req = { ip: '192.0.2.10', socket: { remoteAddress: '127.0.0.1' } };
+
+  const first = makeResponse();
+  limiter(req, first, () => { nextCalls += 1; });
+  const second = makeResponse();
+  limiter(req, second, () => { nextCalls += 1; });
+  const blocked = makeResponse();
+  limiter(req, blocked, () => { nextCalls += 1; });
+
+  assert.equal(nextCalls, 2);
+  assert.equal(blocked.statusCode, 429);
+  assert.equal(blocked.body.code, 'LOGIN_RATE_LIMITED');
+  assert.equal(blocked.headers['Retry-After'], '60');
+
+  currentTime += 60_001;
+  const afterWindow = makeResponse();
+  limiter(req, afterWindow, () => { nextCalls += 1; });
+  assert.equal(afterWindow.statusCode, 200);
+  assert.equal(nextCalls, 3);
 });
