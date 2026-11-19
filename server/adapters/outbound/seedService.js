@@ -4,6 +4,7 @@ import { classSchedules, facilities } from '../../../src/db/schema.ts';
 import {
   CICS_FACILITY_CATALOG,
   OBSOLETE_GENERIC_FACILITY_CODES,
+  CICS_FACILITY_RENAMED_CODES,
 } from '../../domain/projectInfo.js';
 import {
   ClassScheduleSource,
@@ -121,6 +122,15 @@ export async function ensureFacilityCatalog() {
       // 2. Insert any missing canonical CICS Building facilities without fabricating capacities or operational metrics
       const existingRows = await db.select().from(facilities);
       const existingByCode = new Map(existingRows.map((row) => [row.code, row]));
+
+      // Apply only the explicitly approved room-name corrections; preserve other admin-managed fields.
+      for (const code of CICS_FACILITY_RENAMED_CODES) {
+        const canonical = CICS_FACILITY_CATALOG.find((room) => room.code === code);
+        const existing = existingByCode.get(code);
+        if (canonical && existing && existing.name !== canonical.name) {
+          await db.update(facilities).set({ name: canonical.name }).where(eq(facilities.code, code));
+        }
+      }
 
       const missingCicsFacilities = CICS_FACILITY_CATALOG.filter(
         (room) => !existingByCode.has(room.code)
