@@ -176,5 +176,5 @@ test('Firebase Auth Emulator → PostgreSQL → HttpOnly session → password se
     headers: { cookie, 'x-forwarded-proto': 'https' },
   });
   assert.equal(logoutResponse.status, 200);
-  assert.match(logoutResponse.headers.get('set-cookie') || '', /Max-Age=0/i);
+  assert.match(logoutResponse.headers.get('set-cookie') || '', /Expires=Thu, 01 Jan 1970/i);
 });
