@@ -84,7 +84,7 @@ export function createHttpControllers({
 
       res.cookie(SESSION_COOKIE_NAME, token, {
         httpOnly: true,
-        sameSite: isHttps ? 'none' : 'lax',
+        sameSite: 'lax',
         secure: isHttps,
         path: '/',
         maxAge: 1000 * 60 * 60 * 24,
@@ -102,7 +102,7 @@ export function createHttpControllers({
       const isHttps = isHttpsRequest(req);
       res.cookie(SESSION_COOKIE_NAME, token, {
         httpOnly: true,
-        sameSite: isHttps ? 'none' : 'lax',
+        sameSite: 'lax',
         secure: isHttps,
         path: '/',
         maxAge: 1000 * 60 * 60 * 24,
@@ -120,7 +120,7 @@ export function createHttpControllers({
       const isHttps = isHttpsRequest(req);
       const cookieOpts = {
         httpOnly: true,
-        sameSite: isHttps ? 'none' : 'lax',
+        sameSite: 'lax',
         secure: isHttps,
         path: '/',
       };
