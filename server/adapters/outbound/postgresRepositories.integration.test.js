@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 process.env.DATABASE_URL ||= 'postgres://postgres:postgres@127.0.0.1:5432/facicuse_test';
 process.env.SQL_SSL = 'false';
 
-const { pool } = await import('../../../../src/db/index.ts');
-const { createPostgresAdapters } = await import('../../../adapters/outbound/postgresRepositories.js');
+const { pool } = await import('../../../src/db/index.ts');
+const { createPostgresAdapters } = await import('./postgresRepositories.js');
 
 test('PostgreSQL user adapter persists FaCICuSe password hashes and sanitizes public users', async (t) => {
   await pool.query(`
@@ -35,7 +35,7 @@ test('PostgreSQL user adapter persists FaCICuSe password hashes and sanitizes pu
   });
 
   const { userRepo } = createPostgresAdapters();
-  const [inserted] = await pool.query(
+  const inserted = await pool.query(
     `INSERT INTO users (uid, email, full_name, role, email_verified, is_active)
      VALUES ($1, $2, $3, $4, TRUE, TRUE) RETURNING id`,
     ['postgres-adapter-test-uid', 'adapter-test@g.batstate-u.edu.ph', 'Adapter Test User', 'student']
