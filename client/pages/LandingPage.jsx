@@ -200,7 +200,7 @@ export function LandingPage() {
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', marginTop: '0.35rem' }}>
             <Link to="/facilities" className="btn btn-coral">
-              <span>Browse All 38 Spaces</span>
+              <span>Browse All {allFacilities.length > 0 ? `${allFacilities.length} ` : ''}Spaces</span>
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
             <Link to="/timetable" className="btn btn-glass">View Class Timetable</Link>
@@ -231,7 +231,7 @@ export function LandingPage() {
           >
             <div>
               <dd className="tabular" style={{ margin: 0, fontSize: '1.35rem', fontWeight: 700, color: 'var(--accent-blue)' }}>
-                {38}
+                {allFacilities.length}
               </dd>
               <dt style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>CICS spaces</dt>
             </div>
