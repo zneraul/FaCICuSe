@@ -298,7 +298,15 @@ export function LandingPage() {
             fetchPriority="high"
             decoding="async"
             referrerPolicy="no-referrer"
-            onError={(event) => { event.currentTarget.onerror = null; event.currentTarget.src = '/assets/images/cics-building.jpg'; }}
+            onError={(event) => {
+              const image = event.currentTarget;
+              if (image.dataset.fallbackApplied) {
+                image.style.display = 'none';
+                return;
+              }
+              image.dataset.fallbackApplied = 'true';
+              image.src = '/assets/images/cics-building.jpg';
+            }}
           />
           <figcaption className="landing-hero-caption">
             <div style={{ fontWeight: 600, fontSize: '0.96rem' }}>
