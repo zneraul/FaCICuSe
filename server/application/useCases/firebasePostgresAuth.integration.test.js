@@ -134,8 +134,9 @@ test('Firebase Auth Emulator → PostgreSQL → HttpOnly session → password se
   );
   const verified = await signinResponse.json();
   assert.equal(signinResponse.ok, true, JSON.stringify(verified));
-  assert.equal(verified.emailVerified, true);
   assert.ok(verified.idToken);
+  const verifiedClaims = await provider.verifyFirebaseIdToken(verified.idToken);
+  assert.equal(verifiedClaims.email_verified, true);
 
   const sessionResponse = await fetch(`${baseUrl}/auth/session/google`, {
     method: 'POST',
