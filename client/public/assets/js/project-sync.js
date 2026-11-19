@@ -7,6 +7,9 @@
   const ctaAuthLink = document.getElementById('cta-auth-link');
   const mobileMenu = document.getElementById('public-mobile-menu');
 
+  // Remove tokens left by older builds; app sessions are now cookie-only.
+  try { sessionStorage.removeItem('facicuse_user_session_token'); } catch {}
+
   function createAccountMenu(user) {
     if (!headerAuthCta || !headerAuthCta.parentNode) return;
     const name = String(user.fullName || 'My Account');
