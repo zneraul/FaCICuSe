@@ -93,7 +93,7 @@ export async function ensureInitialClassSchedules() {
 }
 
 /**
- * Synchronizes the canonical 37 CICS Building facility inventory and initial recurring
+ * Synchronizes the canonical 38 CICS Building facility inventory and initial recurring
  * class schedule dataset in PostgreSQL without creating demo accounts or deleting/truncating
  * legitimate operational records.
  */
