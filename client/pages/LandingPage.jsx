@@ -99,6 +99,7 @@ export function LandingPage() {
   const [previewDate, setPreviewDate] = useState(getDefaultDate);
   const [previewDetail, setPreviewDetail] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewRefresh, setPreviewRefresh] = useState(0);
 
   // Load unfiltered directory once for the live availability selector & stats
   useEffect(() => {
@@ -161,7 +162,7 @@ export function LandingPage() {
     return () => {
       active = false;
     };
-  }, [previewFacilityId, previewDate]);
+  }, [previewFacilityId, previewDate, previewRefresh]);
 
   const reservableActiveCount = allFacilities.filter(
     (f) => f.isReservable !== false && f.status === 'Available'
@@ -523,20 +524,19 @@ export function LandingPage() {
         <div className="reservation-demo-split">
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
             <div>
-              <span className="section-kicker">Facility Reservations</span>
+              <span className="section-kicker">Live Schedule Check</span>
               <h2 id="reservations-demo-heading" className="section-title">
-                Check Live Booking Windows Before You Request
+                Check Room Availability Before Requesting
               </h2>
               <p style={{ color: 'var(--ink-secondary)', marginTop: '0.45rem', fontSize: '0.94rem' }}>
-                Select any campus space and target date below to inspect real recorded schedule blocks
-                directly from the reservation ledger.
+                Select a reservable CICS room and date to inspect active Pending or Confirmed booking blocks.
               </p>
             </div>
 
             <div className="form-grid-2">
               <div className="field-group">
                 <label htmlFor="preview-facility-select" className="field-label">
-                  Campus Facility
+                  CICS Facility
                 </label>
                 <select
                   id="preview-facility-select"
@@ -564,6 +564,17 @@ export function LandingPage() {
                   onChange={(e) => setPreviewDate(e.target.value)}
                 />
               </div>
+            </div>
+
+            <div className="preview-form-actions" style={{ justifyContent: 'flex-start' }}>
+              <button
+                type="button"
+                className="btn btn-glass btn-sm"
+                onClick={() => setPreviewRefresh((value) => value + 1)}
+                disabled={!previewFacilityId || !previewDate || previewLoading}
+              >
+                {previewLoading ? 'Checking…' : 'Check Schedule'}
+              </button>
             </div>
 
             <div className="glass-panel-subtle" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -627,7 +638,7 @@ export function LandingPage() {
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: 'auto' }}>
               {previewFacilityId && (
                 <Link to={`/facilities/${previewFacilityId}`} className="btn btn-coral btn-sm">
-                  <span>Open Facility &amp; Book</span>
+                  <span>Open Room &amp; Book</span>
                   <ArrowRight size={15} aria-hidden="true" />
                 </Link>
               )}
@@ -647,12 +658,47 @@ export function LandingPage() {
             </div>
           </div>
 
-          <div className="glass-panel-tinted">
-            <strong style={{ fontSize: '0.95rem' }}>Server-Side Conflict Protection</strong>
-            <p style={{ fontSize: '0.88rem', color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
-              Requests are validated against posted building hours, maximum room capacity,
-              role eligibility, and any active overlapping reservation before confirmation.
-            </p>
+          <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+            <div>
+              <span className="section-kicker">Booking Lifecycle</span>
+              <h3 className="section-title" style={{ fontSize: '1.35rem' }}>
+                Three-Step Conflict-Free Coordination
+              </h3>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginTop: '0.25rem' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span className="step-number">01</span>
+                <div>
+                  <strong style={{ fontSize: '0.92rem', color: 'var(--ink-primary)' }}>Pick an Open Window</strong>
+                  <p style={{ fontSize: '0.86rem', color: 'var(--ink-secondary)', marginTop: '0.15rem' }}>
+                    Verify posted CICS hours and avoid existing Pending or Confirmed time blocks.
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span className="step-number">02</span>
+                <div>
+                  <strong style={{ fontSize: '0.92rem', color: 'var(--ink-primary)' }}>Submit Request with Optional Block Tag</strong>
+                  <p style={{ fontSize: '0.86rem', color: 'var(--ink-secondary)', marginTop: '0.15rem' }}>
+                    Include purpose, headcount, and optional BSIT section code (e.g., IT-3106).
+                  </p>
+                </div>
+              </div>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
+                <span className="step-number">03</span>
+                <div>
+                  <strong style={{ fontSize: '0.92rem', color: 'var(--ink-primary)' }}>Track Decision &amp; Room Readiness</strong>
+                  <p style={{ fontSize: '0.86rem', color: 'var(--ink-secondary)', marginTop: '0.15rem' }}>
+                    Receive approval alerts and report room or equipment defects if repairs are needed.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <aside className="alert-banner alert-info" aria-label="Scheduling accuracy policy">
+              <p style={{ fontSize: '0.86rem', color: 'var(--ink-secondary)' }}>
+                Scheduled booking hours reflect confirmed reservations only and never infer unverified physical occupancy.
+              </p>
+            </aside>
           </div>
         </div>
       </section>
