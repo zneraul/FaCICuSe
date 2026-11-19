@@ -46,6 +46,7 @@ export const USER_REPO_METHODS = [
   'findByUid',
   'findByEmail',
   'findAuthRecordByEmail',
+  'setPasswordByUid',
   'findById',
   'findByVerificationTokenHash',
   'createPasswordUser',
