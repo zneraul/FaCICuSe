@@ -293,7 +293,7 @@ export function LandingPage() {
 
         <figure className="landing-hero-media" style={{ margin: 0 }}>
           <img
-            src="/assets/images/facilities/cics-building-wider.webp"
+            src="/assets/images/facilities/Building/Wider.jpeg"
             alt="Batangas State University Alangilan CICS building exterior"
             fetchPriority="high"
             decoding="async"
