@@ -568,6 +568,19 @@ export function createPostgresAdapters() {
       }
     },
 
+    async setPasswordByUid(uid, passwordHash) {
+      try {
+        const rows = await db
+          .update(users)
+          .set({ passwordHash, authProvider: 'google+password' })
+          .where(eq(users.uid, uid))
+          .returning();
+        return sanitizePublicUser(rows[0] || null);
+      } catch (error) {
+        wrapDbError('set user password', error);
+      }
+    },
+
     async markEmailVerified(id) {
       try {
         const rows = await db
