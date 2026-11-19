@@ -56,5 +56,10 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/facicuse_test
           SQL_SSL: 'false'
         run: node --test server/adapters/outbound/postgresRepositories.integration.test.js
+      - name: Run end-to-end Firebase + PostgreSQL authentication flow
+        env:
+          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/facicuse_test
+          SQL_SSL: 'false'
+        run: npx --yes firebase-tools@14.22.0 emulators:exec --project big-anvil-0lvvl --only auth --config firebase.test.json "node --test server/application/useCases/firebasePostgresAuth.integration.test.js"
       - name: Build frontend
         run: npm run build
