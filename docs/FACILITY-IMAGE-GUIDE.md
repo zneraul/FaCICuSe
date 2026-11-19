@@ -1,10 +1,10 @@
 # CICS Facility Photo Guide
 
-The approved source photographs already exist in the repository under
-`client/public/assets/images/facilities/`, organized into floor-specific folders.
-Keep the existing folder names, filenames, capitalization, spaces, and extensions intact.
+The approved source photographs are stored in
+`client/public/assets/images/facilities/`, organized by floor. Preserve the
+folder structure and exact source filenames; do not flatten or duplicate them.
 
-## Existing asset structure
+## Asset structure
 
 ```text
 client/public/assets/images/facilities/
@@ -16,56 +16,32 @@ client/public/assets/images/facilities/
 └── Building/
 ```
 
-The facility registry in `server/domain/facilityMedia.js` points directly to these
-existing files. Do not flatten the folders or copy duplicate images into the root
-of `facilities/`.
+## Corrected facility mappings
 
-## Mapping
+The canonical mapping is maintained in `server/domain/facilityMedia.js`.
+The four previously missing or incorrectly assigned records are now explicitly
+mapped to their matching source photographs:
 
-The canonical mapping is maintained in `FACILITY_IMAGE_BY_CODE`. The API resolves
-these mappings for public and authenticated facility DTOs, while preserving custom
-non-placeholder facility image URLs.
+- `CICS-2F-MT` — All Gender Restroom.jpeg
+- `CICS-2F-ACC` — Accreditation Room.jpeg
+- `CICS-4F-TECH` — Technicians’ Room.jpeg
+- `CICS-4F-ITL` — Information Technology Laboratory.HEIC (original source)
 
-Mapped facilities:
-- First Floor: CICS Organizations Office; Rooms 101–106; Utility Room
-- Second Floor: Female Toilet; Rooms 201–202; Computer Engineering Faculty;
-  CICS Student Services; Consultation Room; CICS Faculty Room; Dean's Office
-- Third Floor: Female and Male Toilets; Computer Laboratories 1–6
-- Fourth Floor: Room 401; Physics Laboratory; SMART Classroom;
-  Electronics Distance Learning; Information Technology Laboratory (HEIC source)
-- Fifth Floor: Rooms 501–506
+All other mapped facilities continue to use their exact floor-folder photographs.
+The two building exterior photographs remain in `Building/`; `Wider.jpeg` is
+the preferred homepage hero and `Closer.jpeg` is its fallback.
 
-## Deliberately unassigned
+## Legacy root images
 
-The following photos are not assigned to another facility because their names
-do not match a confirmed canonical facility:
-- Accreditation Room (2nd Floor)
-- All Gender Restroom (2nd Floor)
-- Technicians' Room (4th Floor)
+The four generic root-level photos (`cics-building.jpg`, `cics-classroom.jpg`,
+`cics-lab.jpg`, and `cics-smart-room.jpg`) are no longer used. The logo remains
+at `client/public/assets/images/facicuse-logo.jpg`. Category fallbacks now point
+to real photographs already included in the floor-based asset folders.
 
-No exact photograph was supplied for:
-- `CICS-2F-MT` — Male Toilet (2nd Floor)
-- `CICS-4F-TECH` — Tech Laboratory
+## Image behavior
 
-These facilities retain their category fallback.
-
-## Building hero
-
-The existing wider exterior image is used as the homepage hero:
-`/assets/images/facilities/Building/Wider.jpeg`
-
-The existing `/assets/images/cics-building.jpg` remains the fallback.
-
-## Optional WebP optimization pack
-
-An optimized WebP copy pack was prepared separately. It is not required for the
-current floor-based JPEG mapping and must not be copied flat into the root folder.
-If the project later adopts those optimized files, place them in the matching
-floor folders and update the registry and hero path together.
-
-## Performance and accessibility
-
-- Facility photos use lazy loading and async decoding where rendered in cards.
-- The homepage hero uses high fetch priority.
-- Images include descriptive alt text.
-- Existing image fallback behavior is preserved.
+- Facility photos retain lazy loading and asynchronous decoding.
+- The homepage hero uses high fetch priority and a real building-photo fallback.
+- Meaningful alt text is retained.
+- The IT Laboratory original is HEIC; browser decoding must be verified in the
+  target browsers before considering that image fully browser-compatible.
