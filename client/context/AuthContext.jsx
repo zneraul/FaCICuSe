@@ -8,7 +8,6 @@ import {
 import {
   apiRequest,
   setAuthToken,
-  setUserSessionToken,
 } from '../services/api.js';
 
 const AuthContext = createContext(null);
@@ -46,7 +45,6 @@ export function AuthProvider({ children }) {
       if (firebaseUser) {
         try {
           const token = await firebaseUser.getIdToken();
-          setUserSessionToken(null);
           setAuthToken(token);
           const data = await apiRequest('/auth/me');
           if (active) {
@@ -69,12 +67,10 @@ export function AuthProvider({ children }) {
           const data = await apiRequest('/auth/session');
           if (active) {
             if (!data.user) {
-              setUserSessionToken(null);
             }
             setUser(data.user || null);
           }
         } catch {
-          setUserSessionToken(null);
           if (active) setUser(null);
         } finally {
           if (active) setLoading(false);
@@ -85,7 +81,6 @@ export function AuthProvider({ children }) {
     const handleSessionExpired = () => {
       if (!active) return;
       setAuthToken(null);
-      setUserSessionToken(null);
       setSessionExpired(true);
       setUser(null);
     };
@@ -114,9 +109,6 @@ export function AuthProvider({ children }) {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
-    if (data.sessionToken) {
-      setUserSessionToken(data.sessionToken);
-    }
     setUser(data.user);
     return data.user;
   }
@@ -124,7 +116,6 @@ export function AuthProvider({ children }) {
   async function signInWithGoogle() {
     setAuthError('');
     setSessionExpired(false);
-    setUserSessionToken(null);
     const result = await signInWithPopup(auth, googleAuthProvider);
     const token = await result.user.getIdToken();
     setAuthToken(token);
@@ -145,7 +136,6 @@ export function AuthProvider({ children }) {
     setAuthError('');
     setSessionExpired(false);
     setAuthToken(null);
-    setUserSessionToken(null);
     if (auth.currentUser) {
       await signOut(auth).catch(() => {});
     }
