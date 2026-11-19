@@ -12,6 +12,7 @@ export function createApiRouter({ controllers, authMiddleware }) {
   router.get('/auth/session', optionalAuth, asyncHandler(controllers.getSessionStatus));
   router.post('/auth/login', asyncHandler(controllers.loginWithEmail));
   router.post('/auth/logout', asyncHandler(controllers.clearSession));
+  router.post('/auth/session/google', requireAuth, asyncHandler(controllers.createGoogleSession));
 
   router.get('/public/project-info', asyncHandler(controllers.getProjectInfo));
   router.get('/public/facilities', asyncHandler(controllers.listPublicFacilities));
