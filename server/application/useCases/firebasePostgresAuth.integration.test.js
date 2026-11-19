@@ -9,6 +9,7 @@ process.env.SQL_SSL = 'false';
 const { pool } = await import('../../../src/db/index.ts');
 const { createPostgresAdapters } = await import('../../adapters/outbound/postgresRepositories.js');
 const { createAuthProviderAdapter } = await import('../../adapters/outbound/firebaseAuthAdapter.js');
+const { getAuth } = await import('firebase-admin/auth');
 const { createAuthMiddleware, SESSION_COOKIE_NAME } = await import('../../adapters/inbound/authMiddleware.js');
 const { createHttpControllers } = await import('../../adapters/inbound/httpControllers.js');
 const { createApiRouter } = await import('../../adapters/inbound/routes.js');
@@ -105,20 +106,7 @@ test('Firebase Auth Emulator → PostgreSQL → HttpOnly session → password se
   assert.equal(unverifiedResponse.status, 401);
   assert.equal(await userRepo.findByUid(signup.localId), null);
 
-  const verifyResponse = await fetch(
-    'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:update?key=fake-api-key',
-    {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({
-        idToken: signup.idToken,
-        emailVerified: true,
-        returnSecureToken: true,
-      }),
-    }
-  );
-  const verificationResult = await verifyResponse.json();
-  assert.equal(verifyResponse.ok, true, JSON.stringify(verificationResult));
+  await getAuth().updateUser(signup.localId, { emailVerified: true });
 
   const signinResponse = await fetch(
     'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-api-key',
