@@ -1,41 +1,10 @@
-const USER_TOKEN_STORAGE_KEY = 'facicuse_user_session_token';
-
 let inMemoryIdToken = null;
-let inMemoryUserToken = null;
-
-function readStoredToken(key, currentMemoryValue) {
-  if (currentMemoryValue) return currentMemoryValue;
-  try {
-    const stored = window.sessionStorage.getItem(key);
-    if (stored) return stored;
-  } catch {
-    // Ignore storage restrictions
-  }
-  return null;
-}
-
-function writeStoredToken(key, token) {
-  try {
-    if (token) {
-      window.sessionStorage.setItem(key, token);
-    } else {
-      window.sessionStorage.removeItem(key);
-    }
-  } catch {
-    // Ignore storage restrictions
-  }
-}
 
 export function setAuthToken(token) {
   inMemoryIdToken = token || null;
 }
 
-export function setUserSessionToken(token) {
-  inMemoryUserToken = token || null;
-  writeStoredToken(USER_TOKEN_STORAGE_KEY, token);
-}
-
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '');
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '').replace(/\\/+$/, '');
 
 export async function apiRequest(path, options = {}) {
   const headers = new Headers(options.headers || {});
@@ -44,12 +13,6 @@ export async function apiRequest(path, options = {}) {
   }
   if (inMemoryIdToken) {
     headers.set('Authorization', `Bearer ${inMemoryIdToken}`);
-  } else {
-    const userToken = readStoredToken(USER_TOKEN_STORAGE_KEY, inMemoryUserToken);
-    if (userToken) {
-      inMemoryUserToken = userToken;
-      headers.set('X-Session-Token', userToken);
-    }
   }
 
   const response = await fetch(`${API_BASE_URL}/api${path}`, {
@@ -68,9 +31,6 @@ export async function apiRequest(path, options = {}) {
 
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
-    if (response.status === 401 && !inMemoryIdToken) {
-      setUserSessionToken(null);
-    }
     if (
       response.status === 401 &&
       !path.startsWith('/auth/') &&
