@@ -78,7 +78,7 @@ export function PublicLayout({ children }) {
             <Link to="/#reservations" className="public-nav-link">
               Availability
             </Link>
-            <Link to="/#how-it-works" className="public-nav-link">
+            <Link to="/#about" className="public-nav-link">
               How It Works
             </Link>
             <Link to="/#faq" className="public-nav-link">
