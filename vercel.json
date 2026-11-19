@@ -6,7 +6,7 @@
     },
     {
       "src": "^/$",
-      "dest": "/landing.html"
+      "dest": "/index.html"
     },
     {
       "handle": "filesystem"
