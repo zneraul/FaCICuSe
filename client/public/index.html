@@ -679,6 +679,26 @@
           </button>
         </form>
 
+        <button type="button" id="auth-modal-password-setup-trigger" class="auth-modal-setup-trigger">Need a separate FaCICuSe password? Set one up</button>
+
+        <div id="auth-modal-password-setup-panel" class="auth-modal-password-setup" hidden>
+          <p class="auth-modal-footnote">Verify your university Google account first. Then create a separate FaCICuSe password that you can use with your university email.</p>
+          <button type="button" id="auth-modal-password-setup-google" class="auth-modal-google-btn">
+            Verify with University Google Account
+          </button>
+          <form id="auth-modal-password-setup-form" class="auth-modal-form" hidden>
+            <div class="auth-modal-field">
+              <label for="auth-modal-new-password" class="auth-modal-label">New FaCICuSe Password</label>
+              <input id="auth-modal-new-password" type="password" class="auth-modal-input" autocomplete="new-password" minlength="12" maxlength="128" required placeholder="At least 12 characters" />
+            </div>
+            <div class="auth-modal-field">
+              <label for="auth-modal-confirm-password" class="auth-modal-label">Confirm FaCICuSe Password</label>
+              <input id="auth-modal-confirm-password" type="password" class="auth-modal-input" autocomplete="new-password" minlength="12" maxlength="128" required placeholder="Re-enter your new password" />
+            </div>
+            <button type="submit" id="auth-modal-password-setup-submit" class="auth-modal-submit">Save FaCICuSe Password</button>
+          </form>
+        </div>
+
         <div class="auth-modal-divider" aria-hidden="true">or continue with</div>
 
         <button type="button" id="auth-modal-google-btn" class="auth-modal-google-btn">
