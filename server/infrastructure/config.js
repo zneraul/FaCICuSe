@@ -46,12 +46,12 @@ export function validateRuntimeConfig(env = process.env) {
         `Production startup aborted: PostgreSQL configuration is incomplete or uses placeholder values (${missing.join(', ')}). Local JSON fallback is disabled in production.`
       );
     }
+  }
 
-    if (!isConfiguredValue(sessionSecret) || sessionSecret.length < 16) {
-      throw new Error(
-        'Production startup aborted: SESSION_SECRET must be configured with a strong secret (at least 16 characters, not a placeholder).'
-      );
-    }
+  if (isProduction && (!isConfiguredValue(sessionSecret) || sessionSecret.length < 32)) {
+    throw new Error(
+      'Production startup aborted: SESSION_SECRET must be configured with a strong secret (at least 32 characters, not a placeholder).'
+    );
   }
 
   const storageMode = postgresReady ? 'postgres' : 'local';
