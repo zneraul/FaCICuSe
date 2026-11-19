@@ -12,6 +12,7 @@ import {
   sortClassSchedules,
 } from '../../domain/classSchedule.js';
 import { formatPublicClassScheduleDto } from './classScheduleUseCases.js';
+import { resolveFacilityImageUrl } from '../../domain/facilityMedia.js';
 
 function formatFacilityDto(facility) {
   return {
@@ -28,7 +29,7 @@ function formatFacilityDto(facility) {
     allowedRoles: parseAllowedRoles(facility.allowedRoles),
     openHour: facility.openHour,
     closeHour: facility.closeHour,
-    imageUrl: facility.imageUrl,
+    imageUrl: resolveFacilityImageUrl(facility),
     isReservable: facility.isReservable !== false,
     isArchived: Boolean(facility.isArchived),
     createdAt: facility.createdAt,
