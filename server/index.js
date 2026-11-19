@@ -50,10 +50,9 @@ export async function startServer() {
 
   const publicHtmlDir = path.join(rootDir, 'client/public');
   app.use('/assets', express.static(path.join(publicHtmlDir, 'assets')));
-  app.get(['/', '/index.html'], (_req, res) => {
-    res.sendFile(path.join(publicHtmlDir, 'index.html'));
-  });
 
+  // The root route belongs to the React/Vite SPA. Do not serve the legacy
+  // standalone client/public/index.html here: its header does not reflect auth state.
   if (!config.isProduction) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
