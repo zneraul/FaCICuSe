@@ -15,10 +15,15 @@ export function PublicLayout({ children }) {
   const isFacilitiesActive = location.pathname === '/' && location.hash === '#facilities';
   const isTimetableActive = location.pathname.startsWith('/timetable');
   useEffect(() => {
-    if (location.pathname !== '/' || !location.hash) return undefined;
+    if (location.pathname !== '/') return undefined;
 
-    const sectionId = decodeURIComponent(location.hash.slice(1));
     const frame = window.requestAnimationFrame(() => {
+      if (!location.hash) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      const sectionId = decodeURIComponent(location.hash.slice(1));
       document.getElementById(sectionId)?.scrollIntoView({
         behavior: 'smooth',
         block: 'start',
