@@ -272,7 +272,7 @@
       return;
     }
     if (!rawPassword) {
-      setAlert('error', 'Please enter your university account password.');
+      setAlert('error', 'Please enter your FaCICuSe password.');
       if (passwordInput) passwordInput.focus();
       return;
     }
