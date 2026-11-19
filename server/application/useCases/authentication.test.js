@@ -2,6 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createUserUseCases } from './userUseCases.js';
 import { createAuthMiddleware, SESSION_COOKIE_NAME } from '../../adapters/inbound/authMiddleware.js';
+import express from 'express';
+import { createApiRouter } from '../../adapters/inbound/routes.js';
+import { createHttpControllers } from '../../adapters/inbound/httpControllers.js';
 
 function makeUserRepo(overrides = {}) {
   const users = new Map();
@@ -226,4 +229,102 @@ test('inactive or invalid cookie sessions are rejected', async () => {
   }, () => assert.fail('Inactive account must not authenticate'));
   assert.equal(responseStatus, 401);
   assert.match(responseBody.error, /Authentication required/);
+});
+
+
+test('Google bearer sign-in exchanges into an HttpOnly cookie that restores the session on reload', async (t) => {
+  const actor = {
+    id: 21,
+    uid: 'google-uid-http',
+    email: 'student@g.batstate-u.edu.ph',
+    fullName: 'HTTP Test Student',
+    role: 'student',
+    department: 'CICS',
+    academicBlock: null,
+    authProvider: 'google',
+    emailVerified: true,
+    isActive: true,
+    isDemo: false,
+  };
+  const authProvider = {
+    async verifyFirebaseIdToken(token) {
+      assert.equal(token, 'mock-firebase-id-token');
+      return { uid: actor.uid, email: actor.email, email_verified: true };
+    },
+    issueSessionToken(uid, type) {
+      assert.equal(uid, actor.uid);
+      assert.equal(type, 'user');
+      return 'mock-signed-session-token';
+    },
+    verifySessionToken(token, type) {
+      assert.equal(token, 'mock-signed-session-token');
+      assert.equal(type, 'user');
+      return { uid: actor.uid };
+    },
+  };
+  const userUseCases = {
+    async syncVerifiedGoogleUser() { return actor; },
+    async setOwnPassword() { return actor; },
+  };
+  const controllers = createHttpControllers({
+    facilityUseCases: {},
+    reservationUseCases: {},
+    classScheduleUseCases: {},
+    maintenanceUseCases: {},
+    userUseCases,
+    dashboardUseCases: {},
+    analyticsUseCases: {},
+    authProvider,
+    domainPolicy: { isConfigured: () => true, allowedDomains: ['g.batstate-u.edu.ph'] },
+  });
+  const authMiddleware = createAuthMiddleware({
+    authProvider,
+    userRepo: { async findByUid(uid) { return uid === actor.uid ? actor : null; } },
+    userUseCases,
+  });
+  const app = express();
+  app.set('trust proxy', 1);
+  app.use(express.json());
+  app.use('/api', createApiRouter({ controllers, authMiddleware }));
+  const server = await new Promise((resolve) => {
+    const instance = app.listen(0, '127.0.0.1', () => resolve(instance));
+  });
+  t.after(() => new Promise((resolve, reject) => {
+    server.close((error) => error ? reject(error) : resolve());
+  }));
+  const address = server.address();
+  const baseUrl = `http://127.0.0.1:${address.port}/api`;
+
+  const signIn = await fetch(`${baseUrl}/auth/session/google`, {
+    method: 'POST',
+    headers: {
+      authorization: 'Bearer mock-firebase-id-token',
+      'x-forwarded-proto': 'https',
+    },
+  });
+  assert.equal(signIn.status, 200);
+  const sessionCookie = signIn.headers.get('set-cookie');
+  assert.ok(sessionCookie);
+  assert.match(sessionCookie, new RegExp(`^${SESSION_COOKIE_NAME}=`));
+  assert.match(sessionCookie, /HttpOnly/i);
+  assert.match(sessionCookie, /Secure/i);
+  assert.match(sessionCookie, /SameSite=None/i);
+  assert.deepEqual((await signIn.json()).user, {
+    id: actor.id,
+    uid: actor.uid,
+    email: actor.email,
+    fullName: actor.fullName,
+    role: actor.role,
+    department: actor.department,
+    academicBlock: null,
+    authProvider: 'google',
+    emailVerified: true,
+  });
+
+  const cookiePair = sessionCookie.split(';', 1)[0];
+  const restored = await fetch(`${baseUrl}/auth/session`, {
+    headers: { cookie: cookiePair },
+  });
+  assert.equal(restored.status, 200);
+  assert.equal((await restored.json()).user.uid, actor.uid);
 });
