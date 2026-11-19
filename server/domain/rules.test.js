@@ -905,6 +905,10 @@ test('resolveFacilityImageUrl prefers explicit facility imageUrl and falls back 
   );
   assert.equal(
     resolveFacilityImageUrl({ code: 'CICS-101', category: 'Learning' }),
+    '/assets/images/facilities/1st Floor/Room 101.jpeg'
+  );
+  assert.equal(
+    resolveFacilityImageUrl({ code: 'CICS-UNKNOWN', category: 'Learning' }),
     DEFAULT_FACILITY_MEDIA.classroom
   );
 });
