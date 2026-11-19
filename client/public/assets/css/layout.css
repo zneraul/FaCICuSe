@@ -463,3 +463,12 @@
     justify-content: flex-end;
   }
 }
+/* Keep anchored homepage sections visible below the sticky public header. */
+#home,
+#about,
+#facilities,
+#how-it-works,
+#reservations,
+#faq {
+  scroll-margin-top: 5.5rem;
+}
