@@ -86,6 +86,7 @@ export function LandingPage() {
   const { openSignInModal } = useAuthModal();
   const [facilities, setFacilities] = useState([]);
   const [allFacilities, setAllFacilities] = useState([]);
+  const [allFacilitiesLoaded, setAllFacilitiesLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState('All');
   const [floor, setFloor] = useState('All Floors');
@@ -107,12 +108,13 @@ export function LandingPage() {
         if (!active) return;
         const list = res.facilities || [];
         setAllFacilities(list);
+        setAllFacilitiesLoaded(true);
         const firstReservable = list.find((f) => f.isReservable !== false) || list[0];
         if (firstReservable) {
           setPreviewFacilityId((prev) => prev || String(firstReservable.id));
         }
       })
-      .catch(() => {});
+      .catch(() => setAllFacilitiesLoaded(true));
     return () => {
       active = false;
     };
@@ -200,7 +202,7 @@ export function LandingPage() {
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', marginTop: '0.35rem' }}>
             <Link to="/facilities" className="btn btn-coral">
-              <span>Browse All {allFacilities.length > 0 ? `${allFacilities.length} ` : ''}Spaces</span>
+              <span>Browse All {allFacilitiesLoaded && allFacilities.length > 0 ? `${allFacilities.length} ` : ''}Spaces</span>
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
             <Link to="/timetable" className="btn btn-glass">View Class Timetable</Link>
@@ -231,7 +233,7 @@ export function LandingPage() {
           >
             <div>
               <dd className="tabular" style={{ margin: 0, fontSize: '1.35rem', fontWeight: 700, color: 'var(--accent-blue)' }}>
-                {allFacilities.length}
+                {allFacilitiesLoaded ? allFacilities.length : '—'}
               </dd>
               <dt style={{ fontSize: '0.78rem', color: 'var(--ink-muted)' }}>CICS spaces</dt>
             </div>
