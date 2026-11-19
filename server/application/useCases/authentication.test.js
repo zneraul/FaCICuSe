@@ -309,7 +309,7 @@ test('Google bearer sign-in exchanges into an HttpOnly cookie that restores the 
   assert.match(sessionCookie, new RegExp(`^${SESSION_COOKIE_NAME}=`));
   assert.match(sessionCookie, /HttpOnly/i);
   assert.match(sessionCookie, /Secure/i);
-  assert.match(sessionCookie, /SameSite=None/i);
+  assert.match(sessionCookie, /SameSite=Lax/i);
   const signInBody = await signIn.json();
   assert.equal(Object.hasOwn(signInBody, 'sessionToken'), false);
   assert.deepEqual(signInBody.user, {
