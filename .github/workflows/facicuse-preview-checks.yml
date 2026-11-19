@@ -17,7 +17,7 @@ concurrency:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -26,9 +26,16 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Set up Java for Firebase Auth Emulator
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: Install dependencies
         run: npm ci
-      - name: Run domain and authentication regression tests
+      - name: Run domain and mocked HTTP authentication regression tests
         run: npm test
+      - name: Run Firebase Admin integration tests against Auth Emulator
+        run: npx --yes firebase-tools@14.22.0 emulators:exec --project big-anvil-0lvvl --only auth --config firebase.test.json "node --test server/application/useCases/firebaseAuthAdapter.integration.test.js"
       - name: Build frontend
         run: npm run build
