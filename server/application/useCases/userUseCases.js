@@ -77,6 +77,30 @@ export function createUserUseCases({
       };
     },
 
+    async setOwnPassword(actor, { password, confirmPassword } = {}) {
+      const rawPassword = String(password || '');
+      const confirmation = String(confirmPassword || '');
+      if (rawPassword.length < 12) {
+        throw new DomainValidationError('FaCICuSe passwords must be at least 12 characters long.');
+      }
+      if (rawPassword.length > 128) {
+        throw new DomainValidationError('FaCICuSe passwords must be 128 characters or fewer.');
+      }
+      if (rawPassword !== confirmation) {
+        throw new DomainValidationError('The password confirmation does not match.');
+      }
+      if (!actor?.uid || !actor.emailVerified || !actor.isActive) {
+        throw new AuthorizationError('A verified, active university account is required to set a password.');
+      }
+
+      const passwordHash = passwordHasher.hashPassword(rawPassword);
+      const updated = await userRepo.setPasswordByUid(actor.uid, passwordHash);
+      if (!updated) {
+        throw new NotFoundError('University account not found. Please sign in again.');
+      }
+      return updated;
+    },
+
     async syncVerifiedGoogleUser(decodedToken, requestedProfile = {}) {
       if (decodedToken?.email_verified === false) {
         throw new DomainError(
