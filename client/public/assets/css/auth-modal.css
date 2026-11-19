@@ -477,3 +477,39 @@
     animation: none !important;
   }
 }
+
+
+.auth-modal-setup-trigger {
+  align-self: flex-start;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #bfdbfe;
+  font: inherit;
+  font-size: 0.8rem;
+  text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.auth-modal-setup-trigger:hover {
+  color: #ffffff;
+}
+
+.auth-modal-setup-trigger:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.auth-modal-password-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-modal-password-setup[hidden],
+.auth-modal-setup-trigger[hidden] {
+  display: none !important;
+}
