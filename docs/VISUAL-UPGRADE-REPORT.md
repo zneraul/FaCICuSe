@@ -1,9 +1,22 @@
 # Visual Upgrade Report — CICS Photos
 
-The uploaded archive contained 40 source photos covering the CICS Building's five floors and two building exterior views. The photos were inspected and converted to WebP, resized to a maximum 1800×1200, quality 80. The optimized pack is approximately 4.3 MB.
+The approved CICS facility photographs are already stored in the repository under
+`client/public/assets/images/facilities/`, organized into `1st Floor` through
+`5th Floor` and `Building` folders. The implementation maps canonical facility
+codes directly to these existing source files, preserving their exact filenames,
+extensions, and folder structure.
 
-The implementation adds canonical photo mappings for 35 facilities, uses the supplied building exterior as the preferred landing hero, and displays facility images in the standalone public homepage preview. The existing React directory and detail views already use the facility image URL from the API, so the API now resolves canonical photo mappings there as well.
+The implementation adds canonical photo mappings for the 35 confirmed matches,
+uses the existing `Building/Wider.jpeg` exterior photo as the preferred landing
+hero, and displays facility images in the standalone public homepage preview.
+The existing React directory and detail views already use the facility image URL
+from the API, so the API resolves the canonical photo mappings there as well.
 
-Three photos were intentionally left unassigned because their names do not match the current canonical catalog. Two catalog facilities have no exact photo in the archive.
+Three photos remain deliberately unassigned because they do not match a confirmed
+canonical catalog entry. The 2nd-floor Male Toilet and 4th-floor Tech Laboratory
+retain fallback imagery because no exact photo match is available.
 
-The optimized binary assets are supplied separately as `facicuse-cics-facility-photos-optimized.zip`; copy them into `client/public/assets/images/facilities/` before merging this branch. No production data or deployment was changed.
+A separate optimized WebP copy pack was prepared, but it is not required by this
+implementation and is not referenced by the current paths. If adopted later, the
+WebP files should replace their corresponding files within the same floor folders;
+do not flatten the asset structure. No production data or deployment was changed.
