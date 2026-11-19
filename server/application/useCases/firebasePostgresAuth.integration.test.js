@@ -117,8 +117,24 @@ test('Firebase Auth Emulator → PostgreSQL → HttpOnly session → password se
       }),
     }
   );
-  const verified = await verifyResponse.json();
-  assert.equal(verifyResponse.ok, true, JSON.stringify(verified));
+  const verificationResult = await verifyResponse.json();
+  assert.equal(verifyResponse.ok, true, JSON.stringify(verificationResult));
+
+  const signinResponse = await fetch(
+    'http://127.0.0.1:9099/identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=fake-api-key',
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        email,
+        password: 'Emulator-Test-Password-123!',
+        returnSecureToken: true,
+      }),
+    }
+  );
+  const verified = await signinResponse.json();
+  assert.equal(signinResponse.ok, true, JSON.stringify(verified));
+  assert.equal(verified.emailVerified, true);
   assert.ok(verified.idToken);
 
   const sessionResponse = await fetch(`${baseUrl}/auth/session/google`, {
