@@ -71,7 +71,7 @@ test('Firebase Auth Emulator → PostgreSQL → HttpOnly session → password se
   const baseUrl = `http://127.0.0.1:${server.address().port}/api`;
 
   t.after(async () => {
-    server.close();
+    await new Promise((resolve) => server.close(resolve));
     await pool.query('DELETE FROM users WHERE uid = $1', [uidMarker]);
     await pool.end();
   });
@@ -130,7 +130,7 @@ test('Firebase Auth Emulator → PostgreSQL → HttpOnly session → password se
     },
     body: '{}',
   });
-  assert.equal(sessionResponse.status, 200, await sessionResponse.text());
+  assert.equal(sessionResponse.status, 200);
   const sessionBody = await sessionResponse.json();
   assert.equal(sessionBody.user.uid, signup.localId);
   assert.equal(sessionBody.user.email, email);
