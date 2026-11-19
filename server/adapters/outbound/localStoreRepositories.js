@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ACTIVE_BLOCKING_STATUSES } from '../../domain/entities.js';
 import { ConflictError } from '../../domain/errors.js';
-import { CICS_FACILITY_CATALOG } from '../../domain/projectInfo.js';
+import { CICS_FACILITY_CATALOG, CICS_FACILITY_RENAMED_CODES } from '../../domain/projectInfo.js';
 import { TimeSlot } from '../../domain/valueObjects.js';
 import {
   ClassScheduleSource,
@@ -148,7 +148,15 @@ export function createLocalStoreAdapters({ storeFilePath = DEFAULT_STORE_FILE } 
           const now = new Date().toISOString();
           let changed = false;
           for (const room of CICS_FACILITY_CATALOG) {
-            if (!existingCodes.has(room.code)) {
+            if (existingCodes.has(room.code)) {
+              if (CICS_FACILITY_RENAMED_CODES.includes(room.code)) {
+                const existing = parsed.facilities.find((facility) => facility.code === room.code);
+                if (existing && existing.name !== room.name) {
+                  existing.name = room.name;
+                  changed = true;
+                }
+              }
+            } else {
               parsed.counters.facilities = (parsed.counters.facilities || parsed.facilities.length) + 1;
               parsed.facilities.push({
                 id: parsed.counters.facilities,
