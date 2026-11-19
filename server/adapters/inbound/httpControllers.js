@@ -114,6 +114,11 @@ export function createHttpControllers({
       res.json({ user: serializeSessionUser(req.actor) });
     },
 
+    async setOwnPassword(req, res) {
+      await userUseCases.setOwnPassword(req.actor, req.body || {});
+      res.json({ ok: true });
+    },
+
     async clearSession(req, res) {
       const isHttps = isHttpsRequest(req);
       const cookieOpts = {
