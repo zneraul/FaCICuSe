@@ -213,7 +213,7 @@ export function AppShell({ title, primaryAction, children }) {
                   />
                 </span>
                 <span className="sidebar-brand-title">FaCICuSe</span>
-              </Link>
+              </a>
               <button
                 type="button"
                 className="mobile-only-btn icon-btn"
