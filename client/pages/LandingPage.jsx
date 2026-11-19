@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BellRing,
   Building2,
+  GraduationCap,
   CalendarCheck2,
   CheckCircle2,
   ChevronDown,
@@ -12,6 +13,7 @@ import {
   Compass,
   Search,
   ShieldCheck,
+  UserRoundCheck,
   Wrench,
 } from 'lucide-react';
 import { PublicLayout } from '../components/PublicLayout.jsx';
@@ -57,23 +59,19 @@ const HOW_IT_WORKS_STEPS = [
 const FAQ_ITEMS = [
   {
     q: 'Can students and faculty check room availability before signing in?',
-    a: 'Yes. The public directory and live availability checker display floor locations, CICS room categories, current operational statuses, and anonymized Pending or Confirmed windows for any selected date.',
+    a: 'Yes. The public directory and live availability checker display floor locations, CICS room categories, operational statuses, and anonymized Pending or Confirmed blocks for any date.',
   },
   {
     q: 'How are double bookings and overlapping reservations prevented?',
-    a: 'Every reservation request is validated inside an atomic server-side transaction against active Pending and Confirmed bookings for that facility and date, rejecting conflicting intervals immediately.',
+    a: 'Every reservation request is validated inside an atomic server-side transaction against active Pending and Confirmed bookings for that facility and date, rejecting conflicts immediately.',
   },
   {
-    q: 'Does a confirmed reservation automatically indicate physical room occupancy?',
-    a: 'No. FaCICuSe tracks scheduled reservation hours and documented operational statuses only. Physical room occupancy is never inferred automatically from calendar bookings.',
+    q: 'How are maintenance issues reported and resolved?',
+    a: 'Signed-in users file structured tickets linked to a specific CICS room with severity and optional photos. Administrators triage tickets from Open to Resolved with action notes.',
   },
   {
-    q: 'How are facility maintenance issues handled after submission?',
-    a: 'Students and professors log structured reports tied directly to the affected space with optional photo evidence. Administrators triage priority, assign crews, and record resolution notes.',
-  },
-  {
-    q: 'Who receives access to campus analytics and role administration?',
-    a: 'Operational analytics, audit logs, facility status overrides, and user role assignments are strictly limited to authenticated System Administrators.',
+    q: 'Who can view utilization analytics and administrative controls?',
+    a: 'Utilization analytics, facility status switches, and user role governance are strictly enforced for System Administrators only on both the server API and workspace navigation.',
   },
 ];
 
@@ -184,9 +182,9 @@ export function LandingPage() {
                 style={{ width: '20px', height: '20px', objectFit: 'contain' }}
               />
             </span>
-            <span>FaCICuSe Campus Platform</span>
+            <span>Batangas State University – Alangilan</span>
             <span aria-hidden="true">·</span>
-            <span>Connected Insights, Coordinated Spaces</span>
+            <span>CICS</span>
           </div>
 
           <h1 id="hero-heading" className="landing-headline">
@@ -196,15 +194,16 @@ export function LandingPage() {
           </h1>
 
           <p className="landing-subhead">
-            Monitoring website for the CICS department facilities at Batangas State University – Alangilan
-            Campus that tracks actual room utilization against scheduled allocations and supports conflict-checked booking.
+            Real-time monitoring and reservation scheduling for the 5-floor College of Informatics and
+            Computing Sciences (CICS) Building—keeping room allocations transparent and conflict-free.
           </p>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', marginTop: '0.35rem' }}>
             <Link to="/facilities" className="btn btn-coral">
-              <span>Explore Facilities</span>
+              <span>Browse All {allFacilities.length || 37} Spaces</span>
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
+            <Link to="/timetable" className="btn btn-glass">View Class Timetable</Link>
             {user ? (
               <Link to="/app/dashboard" className="btn btn-glass">
                 Open Workspace
@@ -268,82 +267,16 @@ export function LandingPage() {
         </figure>
       </section>
 
-      {/* 2. About FaCICuSe */}
-      <section id="about" className="landing-section" aria-labelledby="about-heading">
-        <div className="about-split">
-          <div className="glass-panel-tinted" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '1.15rem' }}>
-            <div>
-              <span className="section-kicker">About FaCICuSe</span>
-              <h2 id="about-heading" className="section-title">
-                Connected Insights, Coordinated Spaces across every department.
-              </h2>
-              <p style={{ color: 'var(--ink-secondary)', marginTop: '0.85rem', fontSize: '0.96rem' }}>
-                Universities operate dozens of specialized instructional halls, research labs,
-                creative studios, and athletic venues—often managed across disconnected spreadsheets
-                and email threads. FaCICuSe brings discovery, scheduling governance, and maintenance
-                accountability together inside one transparent campus platform.
-              </p>
-            </div>
-
-            <div className="alert-banner alert-info">
-              <CheckCircle2 size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
-              <span>
-                Scheduled booking hours reflect confirmed reservations only and never infer
-                unverified physical room occupancy.
-              </span>
-            </div>
-          </div>
-
-          <div className="about-bento-grid">
-            <div className="glass-panel">
-              <Building2 size={22} color="var(--accent-blue)" aria-hidden="true" />
-              <h3 style={{ fontSize: '1.05rem', marginTop: '0.65rem' }}>Centralized Space Catalog</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
-                Standardized room profiles include building location, seat capacity, operating
-                hours, equipment lists, and role access rules.
-              </p>
-            </div>
-
-            <div className="glass-panel">
-              <CalendarCheck2 size={22} color="var(--accent-purple)" aria-hidden="true" />
-              <h3 style={{ fontSize: '1.05rem', marginTop: '0.65rem' }}>Zero Double-Bookings</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
-                Every booking request is checked inside an atomic server transaction against active
-                Pending and Confirmed time slots.
-              </p>
-            </div>
-
-            <div className="glass-panel">
-              <Wrench size={22} color="var(--accent-indigo)" aria-hidden="true" />
-              <h3 style={{ fontSize: '1.05rem', marginTop: '0.65rem' }}>Direct Issue Routing</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
-                Equipment failures and safety defects link directly to the affected facility so
-                repair crews have full room context immediately.
-              </p>
-            </div>
-
-            <div className="glass-panel">
-              <ShieldCheck size={22} color="var(--accent-violet)" aria-hidden="true" />
-              <h3 style={{ fontSize: '1.05rem', marginTop: '0.65rem' }}>Role-Scoped Governance</h3>
-              <p style={{ fontSize: '0.88rem', color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
-                Students, professors, and system administrators each operate within clear permissions
-                and auditable approval workflows.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 3. Campus Facilities */}
       <section id="facilities" className="landing-section" aria-labelledby="discovery-heading">
         <div className="section-header-row">
           <div>
             <span className="section-kicker">CICS Building Directory</span>
             <h2 id="discovery-heading" className="section-title">
-              Discover CICS Building Spaces
+              Explore CICS Classrooms, Labs &amp; Offices
             </h2>
             <p style={{ color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
-              Search all 37 Learning, Administrative, and Support spaces across Floors 1–5 before signing in.
+              Filter rooms across Floors 1–5 by category, floor, or reservability before signing in.
             </p>
           </div>
 
@@ -484,39 +417,6 @@ export function LandingPage() {
             ))}
           </div>
         )}
-      </section>
-
-      {/* 4. How It Works */}
-      <section id="how-it-works" className="landing-section" aria-labelledby="how-heading">
-        <div className="section-header-row">
-          <div>
-            <span className="section-kicker">How It Works</span>
-            <h2 id="how-heading" className="section-title">
-              From Discovery to Confirmed Access in Four Clear Steps
-            </h2>
-            <p style={{ color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
-              A structured reservation lifecycle built to eliminate scheduling conflicts and approval guesswork.
-            </p>
-          </div>
-        </div>
-
-        <div className="steps-timeline">
-          {HOW_IT_WORKS_STEPS.map((item) => {
-            const Icon = item.icon;
-            return (
-              <div key={item.step} className="glass-panel step-card">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <span className="step-number">STEP {item.step}</span>
-                  <Icon size={20} color="var(--accent-blue)" aria-hidden="true" />
-                </div>
-                <h3 style={{ fontSize: '1.1rem', marginTop: '0.35rem' }}>{item.title}</h3>
-                <p style={{ fontSize: '0.9rem', color: 'var(--ink-secondary)' }}>
-                  {item.description}
-                </p>
-              </div>
-            );
-          })}
-        </div>
       </section>
 
       {/* 5. Facility Reservations (Interactive Availability Explorer + Photo Collage) */}
@@ -703,6 +603,57 @@ export function LandingPage() {
         </div>
       </section>
 
+      {/* 4. How It Works & Campus Roles */}
+      <section id="about" className="landing-section" aria-labelledby="roles-heading">
+        <div className="section-header-row">
+          <div>
+            <span className="section-kicker">How It Works &amp; Access Roles</span>
+            <h2 id="roles-heading" className="section-title">
+              Focused Workspaces for Students, Faculty &amp; Administrators
+            </h2>
+            <p style={{ color: 'var(--ink-secondary)', marginTop: '0.35rem' }}>
+              Each role accesses only the booking, maintenance, or governance tools it needs.
+            </p>
+          </div>
+          <Link to="/facilities" className="btn btn-glass btn-sm">Browse All Spaces</Link>
+        </div>
+        <div className="roles-grid">
+          <article className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+            <div className="role-card-header">
+              <span className="role-icon-box" aria-hidden="true"><GraduationCap size={20} /></span>
+              <div><h3 style={{ fontSize: '1.08rem', fontWeight: 700, color: 'var(--ink-primary)' }}>Students</h3><div style={{ fontSize: '0.8rem', color: 'var(--ink-muted)' }}>Academic study &amp; project rooms</div></div>
+            </div>
+            <ul className="bullets-clean">
+              <li>Browse CICS rooms across Floors 1–5 and check open hours before signing in.</li>
+              <li>Request Learning classrooms (101–506) with optional BSIT block tags (e.g., IT-3106).</li>
+              <li>Report classroom or restroom maintenance issues directly to facilities staff.</li>
+            </ul>
+          </article>
+          <article className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+            <div className="role-card-header">
+              <span className="role-icon-box" aria-hidden="true"><UserRoundCheck size={20} /></span>
+              <div><h3 style={{ fontSize: '1.08rem', fontWeight: 700, color: 'var(--ink-primary)' }}>Professors</h3><div style={{ fontSize: '0.8rem', color: 'var(--ink-muted)' }}>Computer labs &amp; instructional rooms</div></div>
+            </div>
+            <ul className="bullets-clean">
+              <li>Reserve Computer Labs 1–6, SMART Classroom, and Physics/Tech/IT laboratories.</li>
+              <li>Verify open slots ahead of class sessions and cancel unused bookings cleanly.</li>
+              <li>Escalate projector, workstation, or HVAC issues with severity tracking.</li>
+            </ul>
+          </article>
+          <article className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+            <div className="role-card-header">
+              <span className="role-icon-box" aria-hidden="true"><ShieldCheck size={20} /></span>
+              <div><h3 style={{ fontSize: '1.08rem', fontWeight: 700, color: 'var(--ink-primary)' }}>Administrators</h3><div style={{ fontSize: '0.8rem', color: 'var(--ink-muted)' }}>Approvals, repairs &amp; analytics</div></div>
+            </div>
+            <ul className="bullets-clean">
+              <li>Approve or reject pending bookings with audit-logged administrative notes.</li>
+              <li>Triage maintenance tickets, switch room statuses, and manage user roles.</li>
+              <li>Review admin-only CICS utilization charts derived strictly from recorded bookings.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
       {/* 6. Frequently Asked Questions */}
       <section id="faq" className="landing-section" aria-labelledby="faq-heading">
         <div className="section-header-row">
@@ -743,17 +694,16 @@ export function LandingPage() {
               <span>Ready to coordinate campus spaces?</span>
             </div>
             <h2 style={{ fontSize: 'clamp(1.65rem, 2.8vw, 2.25rem)', color: '#ffffff' }}>
-              Explore active university facilities or enter your role workspace.
+              Inspect room schedules immediately as a visitor, or sign in to submit reservations and maintenance reports.
             </h2>
             <p style={{ color: 'rgba(240,242,255,0.9)', marginTop: '0.55rem', fontSize: '0.98rem' }}>
-              Check room schedules immediately as a visitor, or sign in with your university identity
-              to reserve spaces and report maintenance issues.
+              Inspect room schedules immediately as a visitor, or sign in to submit reservations and maintenance reports.
             </p>
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem' }}>
             <Link to="/facilities" className="btn btn-on-coral">
-              <span>Explore Facilities</span>
+              <span>Explore All {allFacilities.length || 37} Spaces</span>
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
             <Link to="/timetable" className="btn btn-glass btn-sm">
