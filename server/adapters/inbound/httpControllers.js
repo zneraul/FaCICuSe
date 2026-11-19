@@ -90,10 +90,7 @@ export function createHttpControllers({
         maxAge: 1000 * 60 * 60 * 24,
       });
 
-      res.json({
-        sessionToken: token,
-        user: serializeSessionUser(user),
-      });
+      res.json({ user: serializeSessionUser(user) });
     },
 
     async createGoogleSession(req, res) {
