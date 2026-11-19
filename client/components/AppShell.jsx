@@ -203,7 +203,7 @@ export function AppShell({ title, primaryAction, children }) {
         >
           <div style={{ overflowY: 'auto' }}>
             <div className="sidebar-brand">
-              <Link to="/" className="brand-lockup" onClick={() => setSidebarOpen(false)}>
+              <a href="/" className="brand-lockup" onClick={() => setSidebarOpen(false)} aria-label="Return to the public FaCICuSe homepage">
                 <span className="brand-logo-badge">
                   <img
                     src="/assets/images/facicuse-logo.jpg"
