@@ -190,6 +190,30 @@
     const article = document.createElement('article');
     article.className = 'facility-card';
 
+    const mediaWrap = document.createElement('div');
+    mediaWrap.className = 'facility-media-wrap';
+    const photo = document.createElement('img');
+    photo.className = 'facility-media-img';
+    photo.alt = facility.name || 'CICS facility';
+    photo.loading = 'lazy';
+    photo.decoding = 'async';
+    const fallbackImage = facility.category === 'Administrative'
+      ? '/assets/images/cics-smart-room.jpg'
+      : facility.category === 'Support'
+        ? '/assets/images/cics-building.jpg'
+        : /laboratory|lab/i.test(facility.name || '')
+          ? '/assets/images/cics-lab.jpg'
+          : '/assets/images/cics-classroom.jpg';
+    photo.src = facility.imageUrl || fallbackImage;
+    photo.addEventListener('error', () => {
+      if (photo.src !== new URL(fallbackImage, window.location.origin).href) {
+        photo.src = fallbackImage;
+      } else {
+        mediaWrap.remove();
+      }
+    }, { once: true });
+    mediaWrap.appendChild(photo);
+
     const body = document.createElement('div');
     body.className = 'facility-card-body';
 
@@ -264,7 +288,7 @@
 
     footer.append(hoursTime, detailsLink);
     body.append(metaTop, title, desc, metaLoc, footer);
-    article.append(body);
+    article.append(mediaWrap, body);
     return article;
   }
 
