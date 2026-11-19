@@ -1,16 +1,14 @@
 /**
  * Centralized Facility Media Registry for FaCICuSe (CICS Building).
- *
- * The current approved originals are organized by floor under
- * client/public/assets/images/facilities/. Keep these paths aligned with
- * the existing directory and filename casing; do not flatten or rename assets.
+ * Approved original photographs remain organized in floor-specific folders.
+ * Keep filenames, capitalization, spaces, and extensions aligned with the assets.
  */
 
 export const DEFAULT_FACILITY_MEDIA = Object.freeze({
-  classroom: '/assets/images/cics-classroom.jpg',
-  laboratory: '/assets/images/cics-lab.jpg',
-  smartRoom: '/assets/images/cics-smart-room.jpg',
-  building: '/assets/images/cics-building.jpg',
+  classroom: '/assets/images/facilities/1st Floor/Room 101.jpeg',
+  laboratory: '/assets/images/facilities/3rd Floor/Computer Laboratory 1.jpeg',
+  smartRoom: '/assets/images/facilities/4th Floor/SMART Classroom.jpeg',
+  building: '/assets/images/facilities/Building/Wider.jpeg',
 });
 
 export const FACILITY_MEDIA_PRESETS = Object.freeze([
@@ -23,11 +21,7 @@ export const FACILITY_MEDIA_PRESETS = Object.freeze([
 const FLOOR_PHOTO = (floor, filename) =>
   `/assets/images/facilities/${floor}/${filename}`;
 
-/**
- * Canonical facility code -> exact existing photo path.
- * Accreditation Room, All Gender Restroom, and Technicians' Room are
- * deliberately not assigned because they do not have confirmed catalog matches.
- */
+/** Canonical facility code -> exact approved source photograph path. */
 export const FACILITY_IMAGE_BY_CODE = Object.freeze({
   'CICS-1F-ORG': FLOOR_PHOTO('1st Floor', 'CICS Organizations Office.jpeg'),
   'CICS-101': FLOOR_PHOTO('1st Floor', 'Room 101.jpeg'),
@@ -39,6 +33,8 @@ export const FACILITY_IMAGE_BY_CODE = Object.freeze({
   'CICS-1F-UTIL': FLOOR_PHOTO('1st Floor', 'Utility Room.jpeg'),
 
   'CICS-2F-FT': FLOOR_PHOTO('2nd Floor', 'Female Toilet.jpeg'),
+  'CICS-2F-MT': FLOOR_PHOTO('2nd Floor', 'All Gender Restroom.jpeg'),
+  'CICS-2F-ACC': FLOOR_PHOTO('2nd Floor', 'Accreditation Room.jpeg'),
   'CICS-201': FLOOR_PHOTO('2nd Floor', 'Room 201.jpeg'),
   'CICS-202': FLOOR_PHOTO('2nd Floor', 'Room 202.jpeg'),
   'CICS-2F-CPE': FLOOR_PHOTO('2nd Floor', 'Computer Engineering Faculty.jpeg'),
@@ -60,8 +56,9 @@ export const FACILITY_IMAGE_BY_CODE = Object.freeze({
   'CICS-4F-PHYS': FLOOR_PHOTO('4th Floor', 'Physics Laboratory.jpeg'),
   'CICS-4F-SMART': FLOOR_PHOTO('4th Floor', 'SMART Classroom.jpeg'),
   'CICS-4F-EDL': FLOOR_PHOTO('4th Floor', 'Electronics Distance Learning.jpeg'),
-  // The source is HEIC; FacilityImage falls back gracefully where the browser
-  // cannot decode it. The optimized WebP conversion can replace this path later.
+  'CICS-4F-TECH': FLOOR_PHOTO('4th Floor', 'Technicians’ Room.jpeg'),
+  // The original source is HEIC. Keep the exact photograph mapping; verify
+  // browser decoding before replacing it with a converted derivative.
   'CICS-4F-ITL': FLOOR_PHOTO('4th Floor', 'Information Technology Laboratory.HEIC'),
 
   'CICS-501': FLOOR_PHOTO('5th Floor', 'Room 501.jpeg'),
@@ -79,7 +76,6 @@ export function resolveFacilityImageUrl({ code, category, imageUrl } = {}) {
   const normalizedCode = String(code || '').trim().toUpperCase();
   const matchedPhoto = normalizedCode ? FACILITY_IMAGE_BY_CODE[normalizedCode] : null;
 
-  // Prefer a matched CICS photo over old generic catalog placeholders.
   if (matchedPhoto && (!custom || DEFAULT_IMAGE_VALUES.has(custom))) return matchedPhoto;
   if (custom) return custom;
   if (matchedPhoto) return matchedPhoto;
