@@ -513,3 +513,8 @@
 .auth-modal-setup-trigger[hidden] {
   display: none !important;
 }
+
+
+#auth-modal-password-setup-form[hidden] {
+  display: none !important;
+}
