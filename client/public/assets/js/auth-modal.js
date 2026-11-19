@@ -1,8 +1,6 @@
 'use strict';
 
 (function initFacicuseAuthModal() {
-  const USER_TOKEN_STORAGE_KEY = 'facicuse_user_session_token';
-
   const backdrop = document.getElementById('auth-modal-backdrop');
   const dialog = document.getElementById('auth-modal-dialog');
   const closeBtn = document.getElementById('auth-modal-close');
@@ -39,18 +37,6 @@
     passwordSetupIdToken: null,
     closeTimer: null,
   };
-
-  function writeSessionToken(key, value) {
-    try {
-      if (value) {
-        window.sessionStorage.setItem(key, value);
-      } else {
-        window.sessionStorage.removeItem(key);
-      }
-    } catch {
-      // Ignore browser storage restrictions; httpOnly cookie still handles sessions
-    }
-  }
 
   function resolvePostLoginPath(user, requestedPath) {
     const role = String(user && user.role ? user.role : '').toLowerCase();
@@ -293,9 +279,6 @@
         throw new Error(data.error || 'Invalid university email or password.');
       }
 
-      if (data.sessionToken) {
-        writeSessionToken(USER_TOKEN_STORAGE_KEY, data.sessionToken);
-      }
       completeRedirect(data.user);
     } catch (error) {
       setBusy('');
@@ -332,7 +315,6 @@
     if (state.busy) return;
     setAlert('', '');
     setBusy('google');
-    writeSessionToken(USER_TOKEN_STORAGE_KEY, null);
 
     let fbBridge = null;
     try {
