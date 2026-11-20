@@ -390,7 +390,7 @@
           (f) => f.isReservable !== false && f.status === 'Available'
         ).length;
         const distinctFloors = new Set(list.map((f) => f.floor).filter(Boolean)).size || 5;
-        if (heroStatTotal) heroStatTotal.textContent = '38';
+        if (heroStatTotal) heroStatTotal.textContent = String(list.length);
         if (heroStatActive) heroStatActive.textContent = String(reservableActiveCount);
         if (heroStatCapacity) heroStatCapacity.textContent = String(distinctFloors);
 
@@ -398,6 +398,7 @@
         populatePreviewSelect(previewCandidates.length > 0 ? previewCandidates : list);
       }
     } catch {
+      if (isInitial && heroStatTotal) heroStatTotal.textContent = '—';
       renderFacilities([]);
     }
   }
