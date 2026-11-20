@@ -51,8 +51,6 @@ export async function startServer() {
   const publicHtmlDir = path.join(rootDir, 'client/public');
   app.use('/assets', express.static(path.join(publicHtmlDir, 'assets')));
 
-  // The root route belongs to the React/Vite SPA. Do not serve the legacy
-  // standalone client/public/index.html here: its header does not reflect auth state.
   if (!config.isProduction) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
@@ -63,6 +61,13 @@ export async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distDir = path.join(rootDir, 'dist');
+
+    // Match Vercel's production routing: the public root uses the long-form
+    // standalone landing page, while all other client routes use the React SPA.
+    app.get('/', (_req, res) => {
+      res.sendFile(path.join(distDir, 'landing.html'));
+    });
+
     app.use(express.static(distDir));
     app.get('*', (_req, res) => {
       res.sendFile(path.join(distDir, 'index.html'));
